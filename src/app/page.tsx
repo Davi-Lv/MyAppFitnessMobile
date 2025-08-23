@@ -198,328 +198,336 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <ThemeColorUpdater colorClass={currentWorkout.color} />
-      {/* Header */}
-      <div className={`${currentWorkout.color} p-4 shadow-lg`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-xl sm:text-2xl">{currentWorkout.emoji}</span>
-            <div>
-              <h1 className="text-lg sm:text-xl font-bold">{currentWorkout.day}</h1>
-              <p className="text-xs sm:text-sm opacity-90">{currentWorkout.name}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-xs sm:text-sm opacity-90">Exercício</p>
-              <p className="text-lg sm:text-xl font-bold">{currentExercise + 1}/{currentWorkout.exercises.length}</p>
-            </div>
-            <button onClick={() => setIsModalOpen(true)} className="p-2 bg-white/20 rounded-lg">
-              <Calendar className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Rest Timer is now integrated into the button below */}
-
-      {/* Exercise Details */}
-      <div className="p-2 sm:p-4">
-        <div className="bg-gray-800 rounded-lg p-4 sm:p-6 mb-4">
-
-          {/* Exercise Navigation */}
-          <div className="flex gap-2 sm:gap-4 mb-4">
-            <button
-              onClick={() => setCurrentExercise(Math.max(0, currentExercise - 1))}
-              disabled={currentExercise === 0}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <span className="hidden sm:inline">Anterior</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentExercise(Math.min(currentWorkout.exercises.length - 1, currentExercise + 1))}
-              disabled={currentExercise === currentWorkout.exercises.length - 1}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
-            >
-              <span className="hidden sm:inline">Próximo</span>
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-0">{currentEx.name}</h2>
-            <div className="flex items-center gap-2 text-gray-400 text-sm">
-              <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>{currentEx.sets} séries</span>
-            </div>
-          </div>
-
-          {/* Exercise Image */}
-          <div className="mb-4">
-            <img
-              src={currentEx.image1}
-              alt={`${currentEx.name}`}
-              className="w-full sm: object-cover rounded-lg"
-            />
-          </div>
-
-          {/* Exercise Info */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4">
-            <div className="bg-gray-700 p-3 rounded-lg text-center">
-              <div className="text-xl sm:text-2xl font-bold text-blue-400">{currentEx.sets}</div>
-              <div className="text-xs sm:text-sm text-gray-300">Séries</div>
-            </div>
-            <div className="bg-gray-700 p-3 rounded-lg text-center">
-              <div className="text-xl sm:text-2xl font-bold text-green-400">{currentEx.reps}</div>
-              <div className="text-xs sm:text-sm text-gray-300">Repetições</div>
-            </div>
-            <button onClick={openWeightModal} className="bg-gray-700 p-3 rounded-lg text-center hover:bg-gray-600 transition-colors">
-              <div className="text-xl sm:text-2xl font-bold text-purple-400">{weights[currentEx.name] ? `${weights[currentEx.name]}` : '-'}</div>
-              <div className="text-xs sm:text-sm text-gray-300">Peso (kg)</div>
-            </button>
-            <div className="bg-gray-700 p-3 rounded-lg text-center">
-              <div className="text-xl sm:text-2xl font-bold text-yellow-400">{formatTime(currentEx.rest)}</div>
-              <div className="text-xs sm:text-sm text-gray-300">Descanso</div>
-            </div>
-          </div>
-
-          {/* Rest Button */}
-          {isResting ? (
-            <div className="w-full py-2 rounded-lg font-semibold transition-all bg-yellow-600 text-white flex items-center justify-center mb-2">
-              <div className="flex items-center justify-center gap-3 sm:gap-4">
-                <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
+      {currentWorkout ? (
+        <>
+          <ThemeColorUpdater colorClass={currentWorkout.color} />
+          {/* Header */}
+          <div className={`${currentWorkout.color} p-4 shadow-lg`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-xl sm:text-2xl">{currentWorkout.emoji}</span>
                 <div>
-                  <p className="text-base sm:text-xl font-bold">{formatTime(restTime)}</p>
+                  <h1 className="text-lg sm:text-xl font-bold">{currentWorkout.day}</h1>
+                  <p className="text-xs sm:text-sm opacity-90">{currentWorkout.name}</p>
                 </div>
-                <div className="flex gap-2">
-                  <button onClick={toggleTimer} className="p-2 bg-yellow-700 rounded-lg">
-                    {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  </button>
-                  <button onClick={resetTimer} className="p-2 bg-yellow-700 rounded-lg">
-                    <RotateCcw className="w-4 h-4" />
-                  </button>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="text-xs sm:text-sm opacity-90">Exercício</p>
+                  <p className="text-lg sm:text-xl font-bold">{currentExercise + 1}/{currentWorkout.exercises.length}</p>
+                </div>
+                <button onClick={() => setIsModalOpen(true)} className="p-2 bg-white/20 rounded-lg">
+                  <Calendar className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Rest Timer is now integrated into the button below */}
+
+          {/* Exercise Details */}
+          <div className="p-2 sm:p-4">
+            <div className="bg-gray-800 rounded-lg p-4 sm:p-6 mb-4">
+
+              {/* Exercise Navigation */}
+              <div className="flex gap-2 sm:gap-4 mb-4">
+                <button
+                  onClick={() => setCurrentExercise(Math.max(0, currentExercise - 1))}
+                  disabled={currentExercise === 0}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                  <span className="hidden sm:inline">Anterior</span>
+                </button>
+
+                <button
+                  onClick={() => setCurrentExercise(Math.min(currentWorkout.exercises.length - 1, currentExercise + 1))}
+                  disabled={currentExercise === currentWorkout.exercises.length - 1}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-700 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-600 transition-colors"
+                >
+                  <span className="hidden sm:inline">Próximo</span>
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-0">{currentEx.name}</h2>
+                <div className="flex items-center gap-2 text-gray-400 text-sm">
+                  <Dumbbell className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>{currentEx.sets} séries</span>
+                </div>
+              </div>
+
+              {/* Exercise Image */}
+              <div className="mb-4">
+                <img
+                  src={currentEx.image1}
+                  alt={`${currentEx.name}`}
+                  className="w-full sm: object-cover rounded-lg"
+                />
+              </div>
+
+              {/* Exercise Info */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4">
+                <div className="bg-gray-700 p-3 rounded-lg text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-blue-400">{currentEx.sets}</div>
+                  <div className="text-xs sm:text-sm text-gray-300">Séries</div>
+                </div>
+                <div className="bg-gray-700 p-3 rounded-lg text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-green-400">{currentEx.reps}</div>
+                  <div className="text-xs sm:text-sm text-gray-300">Repetições</div>
+                </div>
+                <button onClick={openWeightModal} className="bg-gray-700 p-3 rounded-lg text-center hover:bg-gray-600 transition-colors">
+                  <div className="text-xl sm:text-2xl font-bold text-purple-400">{weights[currentEx.name] ? `${weights[currentEx.name]}` : '-'}</div>
+                  <div className="text-xs sm:text-sm text-gray-300">Peso (kg)</div>
+                </button>
+                <div className="bg-gray-700 p-3 rounded-lg text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-yellow-400">{formatTime(currentEx.rest)}</div>
+                  <div className="text-xs sm:text-sm text-gray-300">Descanso</div>
+                </div>
+              </div>
+
+              {/* Rest Button */}
+              {isResting ? (
+                <div className="w-full py-2 rounded-lg font-semibold transition-all bg-yellow-600 text-white flex items-center justify-center mb-2">
+                  <div className="flex items-center justify-center gap-3 sm:gap-4">
+                    <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <div>
+                      <p className="text-base sm:text-xl font-bold">{formatTime(restTime)}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={toggleTimer} className="p-2 bg-yellow-700 rounded-lg">
+                        {timerActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      </button>
+                      <button onClick={resetTimer} className="p-2 bg-yellow-700 rounded-lg">
+                        <RotateCcw className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => startRest(currentEx.rest)}
+                  className='w-full py-3 rounded-lg font-semibold transition-all bg-yellow-600 hover:bg-yellow-700 text-white mb-2'
+                >
+                  {`Iniciar Descanso (${formatTime(currentEx.rest)})`}
+                </button>
+              )}
+
+              {/* Sets Tracker */}
+              <div className="mb-4">
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  Controle de Séries
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {Array.from({ length: currentEx.sets }, (_, setIndex) => {
+                    const key = `${currentDay}-${currentExercise}-${setIndex}`;
+                    const isCompleted = completedSets[key];
+                    return (
+                      <button
+                        key={setIndex}
+                        onClick={() => markSetComplete(currentDay, currentExercise, setIndex)}
+                        className={`p-3 rounded-lg border-2 transition-all ${isCompleted
+                          ? 'bg-green-600 border-green-500 text-white'
+                          : 'bg-gray-700 border-gray-600 text-gray-300 hover:border-gray-500'
+                          }`}
+                      >
+                        <div className="text-center">
+                          <div className="font-bold text-sm">Série {setIndex + 1}</div>
+                          <div className="text-xs mt-1">
+                            {isCompleted ? '✓ Feito' : `${currentEx.reps} reps`}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-          ) : (
-            <button
-              onClick={() => startRest(currentEx.rest)}
-              className='w-full py-3 rounded-lg font-semibold transition-all bg-yellow-600 hover:bg-yellow-700 text-white mb-2'
-            >
-              {`Iniciar Descanso (${formatTime(currentEx.rest)})`}
-            </button>
+
+            {/* Tips */}
+            <div className="bg-blue-900 bg-opacity-50 p-3 rounded-lg mb-4">
+              <div className="flex items-start gap-2">
+                <Target className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-blue-300 mb-1">Dicas de Execução:</h4>
+                  <p className="text-sm text-gray-300 min-h-[2.5rem]">{currentEx.tips}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Exercise List */}
+            <div className="mt-6">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Exercícios do Dia</h3>
+              <div className="space-y-2">
+                {currentWorkout.exercises.map((exercise, index) => {
+                  const completedSetsCount = Array.from({ length: exercise.sets }, (_, setIndex) =>
+                    completedSets[`${currentDay}-${index}-${setIndex}`]
+                  ).filter(Boolean).length;
+
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentExercise(index)}
+                      className={`w-full p-3 sm:p-4 rounded-lg text-left transition-all ${index === currentExercise
+                        ? `${currentWorkout.color} shadow-lg`
+                        : 'bg-gray-800 hover:bg-gray-700'
+                        }`}
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <img src={exercise.image1} alt={exercise.name} className="h-16 rounded-lg object-cover" />
+                        <div className="flex-1">
+                          <div className="font-semibold text-sm sm:text-base">{exercise.name}</div>
+                          <div className="text-xs sm:text-sm opacity-75">
+                            {exercise.sets}s • {exercise.reps}r • {formatTime(exercise.rest)}d
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs sm:text-sm opacity-75">Progresso</div>
+                          <div className="font-bold text-sm sm:text-base">
+                            {completedSetsCount}/{exercise.sets}
+                          </div>
+                        </div>
+                      </div>
+                      {completedSetsCount > 0 && completedSetsCount < exercise.sets && (
+                        <div className="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                          <div
+                            className={`${currentWorkout.color} h-1.5 rounded-full`}
+                            style={{ width: `${(completedSetsCount / exercise.sets) * 100}%` }}
+                          ></div>
+                        </div>
+                      )}
+                      {completedSetsCount === exercise.sets && (
+                        <div className="mt-2 flex items-center gap-1 text-green-400 text-xs sm:text-sm">
+                          <CheckCircle className="w-4 h-4" />
+                          Exercício Completo!
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Workout Summary */}
+            <div className="mt-6 bg-gray-800 p-4 rounded-lg">
+              <h3 className="text-base sm:text-lg font-semibold mb-3">Resumo do Treino</h3>
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-blue-400">
+                    {currentWorkout.exercises.length}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-300">Exercícios</div>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-green-400">
+                    {currentWorkout.exercises.reduce((total, ex) => total + ex.sets, 0)}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-300">Séries Totais</div>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-300 mb-2">
+                  <span>Progresso Geral</span>
+                  <span>
+                    {Object.keys(completedSets).filter(key =>
+                      key.startsWith(`${currentDay}-`) && completedSets[key]
+                    ).length} / {currentWorkout.exercises.reduce((total, ex) => total + ex.sets, 0)}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2.5 sm:h-3">
+                  <div
+                    className={`${currentWorkout.color} h-2.5 sm:h-3 rounded-full transition-all duration-300`}
+                    style={{
+                      width: `${(Object.keys(completedSets).filter(key =>
+                        key.startsWith(`${currentDay}-`) && completedSets[key]
+                      ).length / currentWorkout.exercises.reduce((total, ex) => total + ex.sets, 0)) * 100}%`
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Day Selection Modal */}
+          {isModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+              <div className="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-sm">
+                <h3 className="text-lg font-semibold mb-4">Escolha o dia do treino</h3>
+                <div className="space-y-2">
+                  {workoutPlan.map((day, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setCurrentDay(index);
+                        setCurrentExercise(0);
+                        resetTimer();
+                        setIsModalOpen(false);
+                      }}
+                      className={`w-full p-3 sm:p-4 rounded-lg text-left transition-all ${index === currentDay
+                        ? `${day.color} shadow-lg`
+                        : 'bg-gray-700 hover:bg-gray-600'
+                        }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{day.emoji}</span>
+                        <div>
+                          <div className="font-bold">{day.day}</div>
+                          <div className="text-sm opacity-80">{day.name}</div>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="mt-4 w-full py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-semibold"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
           )}
 
-          {/* Sets Tracker */}
-          <div className="mb-4">
-            <h4 className="font-semibold mb-3 flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              Controle de Séries
-            </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {Array.from({ length: currentEx.sets }, (_, setIndex) => {
-                const key = `${currentDay}-${currentExercise}-${setIndex}`;
-                const isCompleted = completedSets[key];
-                return (
+          {/* Weight Input Modal */}
+          {isWeightModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+              <div className="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-sm">
+                <h3 className="text-lg font-semibold mb-4">Atualizar Peso para {currentEx.name}</h3>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={inputWeight[currentEx.name] || ''}
+                    onChange={(e) => handleWeightChange(currentEx.name, e.target.value)}
+                    className="w-full p-3 bg-gray-700 border-2 border-gray-600 rounded-lg focus:border-yellow-500 focus:outline-none"
+                    placeholder="Digite o peso em kg"
+                    autoFocus
+                  />
+                </div>
+                <div className="flex gap-2 mt-4">
                   <button
-                    key={setIndex}
-                    onClick={() => markSetComplete(currentDay, currentExercise, setIndex)}
-                    className={`p-3 rounded-lg border-2 transition-all ${isCompleted
-                      ? 'bg-green-600 border-green-500 text-white'
-                      : 'bg-gray-700 border-gray-600 text-gray-300 hover:border-gray-500'
-                      }`}
+                    onClick={closeWeightModal}
+                    className="flex-1 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-semibold"
                   >
-                    <div className="text-center">
-                      <div className="font-bold text-sm">Série {setIndex + 1}</div>
-                      <div className="text-xs mt-1">
-                        {isCompleted ? '✓ Feito' : `${currentEx.reps} reps`}
-                      </div>
-                    </div>
+                    Cancelar
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Tips */}
-        <div className="bg-blue-900 bg-opacity-50 p-3 rounded-lg mb-4">
-          <div className="flex items-start gap-2">
-            <Target className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-            <div>
-              <h4 className="font-semibold text-blue-300 mb-1">Dicas de Execução:</h4>
-              <p className="text-sm text-gray-300 min-h-[2.5rem]">{currentEx.tips}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Exercise List */}
-        <div className="mt-6">
-          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Exercícios do Dia</h3>
-          <div className="space-y-2">
-            {currentWorkout.exercises.map((exercise, index) => {
-              const completedSetsCount = Array.from({ length: exercise.sets }, (_, setIndex) =>
-                completedSets[`${currentDay}-${index}-${setIndex}`]
-              ).filter(Boolean).length;
-
-              return (
-                <button
-                  key={index}
-                  onClick={() => setCurrentExercise(index)}
-                  className={`w-full p-3 sm:p-4 rounded-lg text-left transition-all ${index === currentExercise
-                    ? `${currentWorkout.color} shadow-lg`
-                    : 'bg-gray-800 hover:bg-gray-700'
-                    }`}
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <img src={exercise.image1} alt={exercise.name} className="h-16 rounded-lg object-cover" />
-                    <div className="flex-1">
-                      <div className="font-semibold text-sm sm:text-base">{exercise.name}</div>
-                      <div className="text-xs sm:text-sm opacity-75">
-                        {exercise.sets}s • {exercise.reps}r • {formatTime(exercise.rest)}d
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs sm:text-sm opacity-75">Progresso</div>
-                      <div className="font-bold text-sm sm:text-base">
-                        {completedSetsCount}/{exercise.sets}
-                      </div>
-                    </div>
-                  </div>
-                  {completedSetsCount > 0 && completedSetsCount < exercise.sets && (
-                    <div className="w-full bg-gray-700 rounded-full h-1.5 mt-2">
-                      <div
-                        className={`${currentWorkout.color} h-1.5 rounded-full`}
-                        style={{ width: `${(completedSetsCount / exercise.sets) * 100}%` }}
-                      ></div>
-                    </div>
-                  )}
-                  {completedSetsCount === exercise.sets && (
-                    <div className="mt-2 flex items-center gap-1 text-green-400 text-xs sm:text-sm">
-                      <CheckCircle className="w-4 h-4" />
-                      Exercício Completo!
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Workout Summary */}
-        <div className="mt-6 bg-gray-800 p-4 rounded-lg">
-          <h3 className="text-base sm:text-lg font-semibold mb-3">Resumo do Treino</h3>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <div className="text-xl sm:text-2xl font-bold text-blue-400">
-                {currentWorkout.exercises.length}
+                  <button
+                    onClick={() => saveWeightAndCloseModal(currentEx.name)}
+                    className="flex-1 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-semibold text-white"
+                  >
+                    Salvar
+                  </button>
+                </div>
               </div>
-              <div className="text-xs sm:text-sm text-gray-300">Exercícios</div>
             </div>
-            <div>
-              <div className="text-xl sm:text-2xl font-bold text-green-400">
-                {currentWorkout.exercises.reduce((total, ex) => total + ex.sets, 0)}
-              </div>
-              <div className="text-xs sm:text-sm text-gray-300">Séries Totais</div>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mt-4">
-            <div className="flex justify-between text-xs sm:text-sm text-gray-300 mb-2">
-              <span>Progresso Geral</span>
-              <span>
-                {Object.keys(completedSets).filter(key =>
-                  key.startsWith(`${currentDay}-`) && completedSets[key]
-                ).length} / {currentWorkout.exercises.reduce((total, ex) => total + ex.sets, 0)}
-              </span>
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-2.5 sm:h-3">
-              <div
-                className={`${currentWorkout.color} h-2.5 sm:h-3 rounded-full transition-all duration-300`}
-                style={{
-                  width: `${(Object.keys(completedSets).filter(key =>
-                    key.startsWith(`${currentDay}-`) && completedSets[key]
-                  ).length / currentWorkout.exercises.reduce((total, ex) => total + ex.sets, 0)) * 100}%`
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Day Selection Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-sm">
-            <h3 className="text-lg font-semibold mb-4">Escolha o dia do treino</h3>
-            <div className="space-y-2">
-              {workoutPlan.map((day, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setCurrentDay(index);
-                    setCurrentExercise(0);
-                    resetTimer();
-                    setIsModalOpen(false);
-                  }}
-                  className={`w-full p-3 sm:p-4 rounded-lg text-left transition-all ${index === currentDay
-                    ? `${day.color} shadow-lg`
-                    : 'bg-gray-700 hover:bg-gray-600'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{day.emoji}</span>
-                    <div>
-                      <div className="font-bold">{day.day}</div>
-                      <div className="text-sm opacity-80">{day.name}</div>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="mt-4 w-full py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-semibold"
-            >
-              Fechar
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Weight Input Modal */}
-      {isWeightModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-sm">
-            <h3 className="text-lg font-semibold mb-4">Atualizar Peso para {currentEx.name}</h3>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                value={inputWeight[currentEx.name] || ''}
-                onChange={(e) => handleWeightChange(currentEx.name, e.target.value)}
-                className="w-full p-3 bg-gray-700 border-2 border-gray-600 rounded-lg focus:border-yellow-500 focus:outline-none"
-                placeholder="Digite o peso em kg"
-                autoFocus
-              />
-            </div>
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={closeWeightModal}
-                className="flex-1 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-semibold"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => saveWeightAndCloseModal(currentEx.name)}
-                className="flex-1 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-semibold text-white"
-              >
-                Salvar
-              </button>
-            </div>
-          </div>
+          )}
+        </>
+      ) : (
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-white text-xl">Carregando treino...</p>
         </div>
       )}
     </div>
