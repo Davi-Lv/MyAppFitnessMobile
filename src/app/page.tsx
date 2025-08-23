@@ -99,7 +99,8 @@ export default function Home() {
 
   useEffect(() => {
     const today = new Date().getDay(); // Domingo = 0, Segunda = 1, etc.
-    const dayIndex = today === 0 ? 6 : today - 1; // Ajusta para o array (Segunda = 0)
+    // Ajusta para o array: 0 (Segunda) a 4 (Sexta). Se for fim de semana (Dom/Sab), define para Segunda (0).
+    const dayIndex = today === 0 || today === 6 ? 0 : today - 1;
     setCurrentDay(dayIndex);
   }, []);
 
@@ -193,7 +194,7 @@ export default function Home() {
   };
 
   const currentWorkout = workoutPlan[currentDay];
-  const currentEx = currentWorkout.exercises[currentExercise];
+  const currentEx = currentWorkout?.exercises[currentExercise];
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
